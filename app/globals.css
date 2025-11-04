@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -22,5 +23,638 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Questrial", "sans-serif";
+}
+/* App.css */
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+}
+.layout.row {
+  flex-direction: row;
+}
+@font-face {
+  font-family: swiper-icons;
+  src: url("data:application/font-woff;charset=utf-8;base64, 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");
+  font-weight: 400;
+  font-style: normal;
+}
+.pirGreen--text {
+  color: #6fb745 !important;
+  caret-color: #6fb745 !important;
+}
+
+.pirBlue--text {
+  color: #0e163f !important;
+  caret-color: #0d163f !important;
+}
+.pirRed--text {
+  color: #dc3545;
+}
+.btnbg {
+  background-color: #172154;
+}
+.myFont {
+  font-family: "swiper-icons" !important;
+}
+
+.text-xs-center {
+  text-align: center;
+}
+
+.hidden-sm-and-down {
+  display: none;
+}
+
+.hidden-md-and-up {
+  display: block;
+}
+
+@media (min-width: 600px) {
+  .hidden-sm-and-down {
+    display: block;
+  }
+
+  .hidden-md-and-up {
+    display: none;
+  }
+}
+
+.theme--light.v-footer {
+  background: #f5f5f5;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.blue-grey.lighten-4 {
+  background-color: #cfd8dc !important;
+  border-color: #cfd8dc !important;
+}
+.v-footer {
+  align-items: center;
+  display: flex;
+  flex: 0 1 auto !important;
+  min-height: 36px;
+  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.pa-4 {
+  padding: 24px !important;
+}
+.contact-bg {
+  background-color: #cfd8dc;
+}
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+.previous-date {
+  color: gray !important;
+  border: 1px solid gray;
+  border-radius: 50%;
+}
+
+.selected-date {
+  background-color: blue !important;
+  color: white !important;
+  border-radius: 50%;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* footer */
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: #6fb745; /* Green background */
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.social-icons a:hover {
+  opacity: 0.8;
+}
+.footer-bottom {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #1a2644;
+}
+.icon {
+  color: #6fb745;
+  font-size: 16px;
+}
+.accordion-item-body-content {
+  padding: 1rem;
+  line-height: 1.5rem;
+  border-top: 1px solid;
+  border-image: linear-gradient(to right, transparent, #34495e, transparent) 1;
+}
+.page-header.breadcrumb-wrap {
+  padding: 10px;
+  background-color: #fff;
+  border-bottom: 1px solid #ececec;
+  font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic,
+    AppleGothic, sans-serif;
+}
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  list-style: none;
+}
+.category-items {
+  border: 1px solid #bac2c9;
+  background-color: #fff;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100%;
+}
+.category-items:hover {
+  border: 1px solid #6fb745;
+  color: #fff;
+
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.discount-badge,
+.availability-status {
+  min-height: 10px; /* Adjust height based on design */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+}
+
+.discount-badge.hidden,
+.availability-status.hidden {
+  visibility: hidden; /* Keeps space occupied */
+}
+.item-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100%; /* Ensures all items have the same height */
+}
+
+.img-container {
+  width: 100%;
+  height: 400px; /* Default height for larger screens */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make the image fully responsive */
+.img-container img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 10px; /* Smooth edges */
+}
+
+/* Text section */
+.items-text {
+  min-height: 60px; /* Keeps text aligned */
+  text-align: center;
+  font-size: 1rem;
+}
+.item-text{
+  min-height: 60px; /* Keeps text aligned */
+  text-align: center;
+  font-size: larger;
+  font-weight: 800;
+}
+/* Button styling */
+.items-button {
+  min-height: 40px; /* Maintains button space */
+  padding: 10px 16px;
+  font-size: 1rem;
+}
+
+/* Keep space occupied for missing elements */
+.hiddenn {
+  visibility: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) { /* Tablets */
+  .img-container {
+    height: 300px; /* Reduce height for tablets */
+  }
+  .items-text {
+    font-size: 1rem;
+  }
+  .items-button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) { /* Mobile Devices */
+  .img-container {
+    height: 250px; /* Reduce height for smaller screens */
+  }
+  .img-container img {
+    object-fit: contain; /* Ensure full image visibility */
+  }
+  .items-text {
+    font-size: 0.9rem;
+    min-height: 50px;
+  }
+  .items-button {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 480px) { /* Small Phones */
+  .img-container {
+    height: 200px; /* Smaller height for mobile */
+  }
+  .items-text {
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+  .items-button {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+  }
+}
+
+/* /////////////............... */
+.image-container {
+  width: 100%;
+  height: 180px; /* Fixed height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-items {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover; /* Ensures images fit properly */
+}
+
+.itemicons {
+  min-height: 30px; /* Prevents shifting */
+}
+
+.item-name {
+  min-height: 20px; /* Keeps text aligned */
+}
+
+.item-price {
+  min-height: 20px; /* Ensures price position remains fixed */
+}
+.addbtn {
+  background-color: #172154;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: 700;
+}
+.addbtn:hover {
+  background-color: #6fb745;
+  cursor: pointer;
+}
+.image-items {
+  transition: transform 0.3s ease-in-out;
+}
+.image-items:hover {
+  transform: scale(0.9);
+}
+.item-icons {
+  color: #6fb745;
+  font-size: 22px;
+  cursor: pointer;
+  border: 3px solid #6fb745;
+  padding: 3px;
+  border-radius: 5px;
+}
+.item-icons:hover {
+  transform: translateY(-4px);
+  color: #6fb745;
+}
+.itemicons {
+  color: #1d3557;
+  font-size: 22px;
+  cursor: pointer;
+}
+.itemicons:hover {
+  transform: translateY(-4px);
+  color: #6fb745;
+}
+
+/* navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #1d3557;
+}
+
+.logo span {
+  color: green;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #263864;
+  font-weight: 500;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.nav-links .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  width: 200px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+}
+
+.dropdown-menu li a {
+  color: #333;
+}
+
+.cart-contact {
+  display: flex;
+  gap: 20px;
+}
+
+.cart {
+  color: #1a2644;
+  margin-top: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  font-size: larger;
+}
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #263864;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.contact {
+  color: #78b745;
+  font-weight: bold;
+  font-size: 22px;
+}
+.headphone {
+  font-size: 30px;
+  font-weight: 800;
+  color: #172154;
+}
+.nav {
+  position: fixed; /* or use 'sticky' */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white; /* Ensure it has a background */
+  z-index: 1000; /* Higher than the banner */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+}
+.blogh {
+  font-weight: 800;
+  font-size: 22px;
+  color: #263864;
+  padding-bottom: 5px;
+  padding-top: 10px;
+}
+.blogp {
+  font-size: 15px;
+  color: #263864;
+  text-align: justify;
+}
+.icon-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  left: 100%;
+  transform: translateX(-30%);
+  background-color: #263864;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.1s;
+  bottom: 100%;
+  margin-bottom: 5px;
+}
+
+.icon-container:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  animation: showTooltip 1s forwards;
+}
+
+@keyframes showTooltip {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.itemicons {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.help-text {
+  position: absolute;
+  bottom: -20px; /* Moves text below the icon */
+  background-color: rgba(0, 0, 0, 0.75); /* Dark background */
+  color: white;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.itemicons:hover .help-text {
+  opacity: 1; /* Show text on hover */
+}
+@media (max-width: 640px) {
+  .image-items {
+    max-width: 180px !important;
+    height: auto;
+  }
+}
+
+@media (min-width: 641px) {
+  .image-items {
+    max-width: 200px !important;
+    height: auto;
+  }
+}
+
+/* Fix popup visibility */
+.popup-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000 !important; /* Ensures it appears above other elements */
+  max-width: 90%;
+  text-align: center;
+}
+
+/* Blur background when popup is active */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998; /* Below the popup but above other elements */
+}
+.tooltipp {
+  position: absolute;
+  left: 50%;
+  top: 110%;
+  transform: translateX(-50%);
+  background: #575962;
+  color: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  white-space: normal;
+  max-width: 330px;
+  z-index: 50;
+  text-align: justify;
+}
+
+/* Media Query for Larger Screens */
+@media (min-width: 768px) {
+  .tooltipp {
+    font-size: 14px;
+    max-width: 350px;
+    padding: 10px 14px;
+  }
+}
+
+.scrollbar-visible {
+  overflow-y: scroll; /* Ensure scrolling is enabled */
+  -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+}
+
+/* Force scrollbar to be visible on iOS */
+.scrollbar-visible::-webkit-scrollbar {
+  -webkit-appearance: none; /* Remove default iOS scrollbar styling */
+  width: 8px; /* Set a visible width for the scrollbar */
+}
+
+/* Style the scrollbar track */
+.scrollbar-visible::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light background for the track */
+}
+
+/* Style the scrollbar thumb */
+.scrollbar-visible::-webkit-scrollbar-thumb {
+  background: #888; /* Darker color for the thumb */
+  border-radius: 4px; /* Rounded edges for the thumb */
+}
+
+/* Optional: Change thumb color on hover */
+.scrollbar-visible::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker color on hover */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
