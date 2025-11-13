@@ -3,6 +3,7 @@ import CategoriesComponent from "@/components/CategoriesComponent";
 import AboutUs from "@/components/AboutUs";
 import ContactUs from "@/components/ContactUs";
 import Head from "next/head";
+import Welcome from "@/components/Welcome";
 
 export default function Home() {
   const schemaData = {
@@ -35,6 +36,7 @@ export default function Home() {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }} />
       </Head>
       <Banner />
+      <Welcome/>
       <CategoriesComponent />
       <AboutUs />
       <ContactUs />

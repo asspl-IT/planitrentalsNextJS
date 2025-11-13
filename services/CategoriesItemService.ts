@@ -21,42 +21,37 @@ export class CategoriesItemService {
    * @param data - Request payload with categoryId, dateRange, and locationId
    */
   static async fetchCategoryItems(data: Record<string, any>): Promise<CategoryItem[]> {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_AWS_API_URL;
-      if (!baseUrl) {
-        throw new Error("NEXT_PUBLIC_AWS_API_URL is not defined in environment variables");
-      }
+  try {
+    // ✅ Use the rewrite endpoint (no CORS)
+    const apiEndpoint = "/aws/categoriesitem";
 
-      // Ensure correct endpoint (backend route is /dev/categoriesitem)
-      const apiEndpoint = `${baseUrl}categoriesitem`;
+    console.log("📡 Fetching dynamic items from:", apiEndpoint, "with payload:", data);
 
-      console.log("📡 Fetching dynamic items from:", apiEndpoint, "with payload:", data);
+    const response = await axios.post<CategoryItemsResponse>(apiEndpoint, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      const response = await axios.post<CategoryItemsResponse>(apiEndpoint, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.data?.data && Array.isArray(response.data.data)) {
-        console.log("✅ Category items fetched:", response.data.data.length);
-        return response.data.data;
-      } else {
-        console.error("⚠️ Unexpected API response for category items:", response.data);
-        throw new Error("Invalid response format while fetching category items.");
-      }
-    } catch (error: any) {
-      if (error.response) {
-        console.error("❌ API Response Error:", error.response.data);
-      } else if (error.request) {
-        console.error("❌ No response received from API:", error.request);
-      } else {
-        console.error("❌ Error setting up request:", error.message);
-      }
-
-      throw new Error("Failed to fetch category items. Please try again later.");
+    if (response.data?.data && Array.isArray(response.data.data)) {
+      console.log("✅ Category items fetched:", response.data.data.length);
+      return response.data.data;
+    } else {
+      console.error("⚠️ Unexpected API response for category items:", response.data);
+      throw new Error("Invalid response format while fetching category items.");
     }
+  } catch (error: any) {
+    if (error.response) {
+      console.error("❌ API Response Error:", error.response.data);
+    } else if (error.request) {
+      console.error("❌ No response received from API:", error.request);
+    } else {
+      console.error("❌ Error setting up request:", error.message);
+    }
+
+    throw new Error("Failed to fetch category items. Please try again later.");
   }
+}
 
   /**
    * Fetch static category items from MySQL by category slug

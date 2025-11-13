@@ -66,7 +66,7 @@ console.log("Processed:", processedCategories);
               <FaShoppingCart className="text-3xl text-green-600" />
               {totalItems > 0 && (
                 <>
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="absolute -top-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     {totalItems}
                   </span>
                   <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 font-semibold text-green-600">
@@ -117,11 +117,11 @@ console.log("Processed:", processedCategories);
             ))}
           </ul>
 
-          <div className="text-green-600 font-semibold">
-            <a href="tel:8013195524" className="hover:underline">
+          <div className="text-green-600 ">
+            <a href="tel:8013195524" className="hover:underline font-semibold">
               801-319-5524
             </a>
-            <p className="text-xs text-gray-500 text-center">Call or Text Us!</p>
+            <p className="text-sm text-blue-950 text-center">Call or Text Us!</p>
           </div>
         </div>
       </nav>

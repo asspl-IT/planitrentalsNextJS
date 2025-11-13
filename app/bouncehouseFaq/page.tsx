@@ -93,12 +93,12 @@ const BounceHouseFAQ = () => {
       </Head>
 
       <div className="page-header md:mt-[100px] breadcrumb-wrap mb-7">
-        <div className="flex flex-wrap gap-2 pb-3 text-sm font-semibold pirBlue--text mt-2 md:mt-0">
+        <div className="flex flex-wrap gap-2 pb-1 text-sm font-semibold pirBlue--text mt-2 md:mt-0">
           <Link href="/" className="pirGreen--text">
             Home
           </Link>
           <FaGreaterThan className="mt-1" />
-          <span>Bounce House FAQ</span>
+          <span className="text-blue-900">Bounce House FAQ</span>
         </div>
       </div>
 

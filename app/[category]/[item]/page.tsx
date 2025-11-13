@@ -9,7 +9,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ category: string; item: string }>;
 }): Promise<Metadata> {
-  const resolvedParams = await params; // ✅ Await the Promise
+  const resolvedParams = await params;
 
   try {
     const staticItem = await ItemDetailsService.fetchItemDetailsMySql(resolvedParams.item);

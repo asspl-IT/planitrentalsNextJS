@@ -63,11 +63,11 @@ const BlogDetail = () => {
             Home
           </Link>
           <FaGreaterThan className="mt-1" />
-          <Link href="/blog" className="pirBlue--text">
+          <Link href="/blog" className="text-blue-900">
             Blog
           </Link>
           <FaGreaterThan className="mt-1" />
-          <span>
+          <span className="text-blue-900">
             {post.title
               ? post.title.slice(0, post.title.length / 2) + "..."
               : ""}

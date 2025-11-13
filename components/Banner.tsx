@@ -33,7 +33,7 @@ const Banner = () => {
   return (
     <div className="container mx-auto pt-30">
       <div
-        className="w-full h-[300px] md:h-[400px] overflow-hidden relative rounded-xl"
+        className="w-full h-[300px] md:h-[350px] overflow-hidden relative rounded-xl"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -54,7 +54,7 @@ const Banner = () => {
 
         {/* Arrows */}
         <button
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-white text-3xl"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-900 text-5xl"
           onClick={() =>
             setActiveIndex(
               (prev) => (prev - 1 + banners.length) % banners.length
@@ -64,24 +64,24 @@ const Banner = () => {
           <FiChevronLeft />
         </button>
         <button
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-white text-3xl"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-900 text-5xl"
           onClick={() => setActiveIndex((prev) => (prev + 1) % banners.length)}
         >
           <FiChevronRight />
         </button>
 
         {/* Dots */}
-        <div className="absolute bottom-2 w-full flex justify-center gap-2">
-          {banners.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIndex(i)}
-              className={`w-3 h-3 rounded-full ${
-                i === activeIndex ? "bg-green-500" : "bg-gray-300"
-              }`}
-            />
-          ))}
-        </div>
+        <div className="absolute bottom-0 left-0 w-full bg-black/40 backdrop-blur-sm py-3 flex justify-center gap-2 rounded-b-xl">
+  {banners.map((_, i) => (
+    <button
+      key={i}
+      onClick={() => setActiveIndex(i)}
+      className={`w-3 h-3 rounded-full ${
+        i === activeIndex ? "bg-green-500" : "bg-gray-300"
+      }`}
+    />
+  ))}
+</div>
       </div>
     </div>
   );

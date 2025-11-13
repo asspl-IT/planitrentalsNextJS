@@ -8,7 +8,7 @@ import { locationLoader } from "@/config/locationLoader";
 import { CartService } from "@/services/CartService";
 import { cartStore } from "@/zustand/cartStore";
 
-// ✅ Define types for holiday items
+// ✅ Define types for holidays
 interface HolidayItem {
   title: string;
   content: string;
@@ -25,16 +25,15 @@ const Holidays: React.FC = () => {
 
   const { setHolidayList } = cartStore();
 
-  // ✅ Fetch holidays
   useEffect(() => {
     const fetchHolidayData = async () => {
       setLoading(true);
       try {
         const cacheKey = `holidayList_${incomingLocation}`;
-        const cachedHolidayList = sessionStorage.getItem(cacheKey);
+        const cachedData = sessionStorage.getItem(cacheKey);
 
-        if (cachedHolidayList) {
-          const parsedList = JSON.parse(cachedHolidayList);
+        if (cachedData) {
+          const parsedList = JSON.parse(cachedData);
           const formatted = parsedList.map((holiday: any) => ({
             title:
               holiday.Header__c ||
@@ -46,11 +45,10 @@ const Holidays: React.FC = () => {
         } else {
           const today = new Date().toISOString().split("T")[0];
           const data = await CartService.getLocationData(
-    incomingLocation,
-    "Mon",
-    today
-  );
-
+            incomingLocation,
+            "Mon",
+            today
+          );
           const fetchedList = data.holidayList || [];
           const formatted = fetchedList.map((holiday: any) => ({
             title:
@@ -77,16 +75,16 @@ const Holidays: React.FC = () => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  // ✅ Loading state
+  // ✅ Loading UI
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="loader" aria-label="Loading"></div>
+        <div className="loader" aria-label="Loading..."></div>
       </div>
     );
   }
 
-  // ✅ Error state
+  // ✅ Error UI
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen text-red-500">
@@ -110,29 +108,29 @@ const Holidays: React.FC = () => {
       {/* Breadcrumbs */}
       <div className="page-header md:mt-[100px] breadcrumb-wrap mb-7">
         <div className="flex flex-wrap gap-2 text-sm font-semibold text-pirBlue mt-2 md:mt-0">
-          <Link href="/" className="text-pirGreen">
+          <Link href="/" className="text-green-600 hover:underline">
             Home
           </Link>
           <span>
             <FaGreaterThan className="mt-1" />
           </span>
-          <span>Holiday Pricing & Details</span>
+          <span className="text-blue-900">Holiday Pricing & Details</span>
         </div>
       </div>
 
       {/* Page Content */}
       <div className="container px-4 md:px-8">
         <div className="m-10">
-          <p className="text-gray-600 text-center mb-5 px-4 sm:px-0 font-semibold text-xl text-pirBlue">
+          <p className="text-blue-950 text-center mb-5 px-4 sm:px-0 font-semibold text-xl text-pirBlue">
             <strong>
               Holidays not listed below are regular price, and regular pickup
-              (day of rental between 9:30-Noon by appointment) and drop-off
+              (day of rental between 9:30–Noon by appointment) and drop-off
               (before 9:00am the following business day).
             </strong>
           </p>
 
           {holidayItems.length === 0 ? (
-            <p className="text-center text-pirBlue">
+            <p className="text-center text-blue-950">
               No holidays available for this location.
             </p>
           ) : (
@@ -146,7 +144,7 @@ const Holidays: React.FC = () => {
                     onClick={() => toggleAccordion(index)}
                     className="w-full flex justify-between items-center p-4 text-left font-semibold text-pirBlue transition duration-300 ease-in-out hover:bg-gray-100 rounded-lg"
                   >
-                    <span>{item.title}</span>
+                    <span className="text-blue-950">{item.title}</span>
                     <span className="text-lg font-bold">
                       {activeIndex === index ? "−" : "+"}
                     </span>

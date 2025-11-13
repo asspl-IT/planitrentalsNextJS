@@ -20,7 +20,7 @@ const AboutUs = () => {
           </h1>
           <div className="mx-auto text-justify space-y-4 leading-6">
             {aboutUsText.map((paragraph, index) => (
-              <p key={index} className="text-gray-800 text-[15px]">
+              <p key={index} className="text-blue-950 text-[15px]">
                 {paragraph}
               </p>
             ))}

@@ -173,7 +173,6 @@ body {
   border-image: linear-gradient(to right, transparent, #34495e, transparent) 1;
 }
 .page-header.breadcrumb-wrap {
-  padding: 10px;
   background-color: #fff;
   border-bottom: 1px solid #ececec;
   font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic,

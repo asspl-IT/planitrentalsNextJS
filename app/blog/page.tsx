@@ -74,7 +74,7 @@ export default function Blog() {
           <span>
             <FaGreaterThan className="mt-1" />
           </span>
-          <span>Blog</span>
+          <span className="text-blue-900">Blog</span>
         </div>
       </div>
 

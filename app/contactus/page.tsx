@@ -37,7 +37,7 @@ const ContactUsPage = () => {
             Home
           </Link>
           <FaGreaterThan className="mt-1" />
-          <h1>Contact Us</h1>
+          <h1 className="text-blue-900">Contact Us</h1>
         </div>
       </div>
 

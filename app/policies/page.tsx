@@ -85,13 +85,13 @@ const Policies = () => {
       </Head>
 
       <div className="relative">
-        <div className="relative z-10 md:mt-[100px] mb-7 border-b border-gray-200">
-          <div className="flex flex-wrap gap-2 text-m font-semibold pb-4 text-blue-950 mt-2 md:mt-0 px-4">
+        <div className=" page-header breadcrumb-wrap relative z-10 md:mt-[100px]">
+          <div className="flex flex-wrap gap-2 text-sm font-semibold pb-1 text-blue-950">
             <Link href="/" className="text-green-600 hover:underline">
               Home
             </Link>
             <FaGreaterThan className="mt-1" />
-            <span>Policies</span>
+            <span className="text-blue-900">Policies</span>
           </div>
         </div>
 
@@ -114,7 +114,7 @@ const Policies = () => {
 
                 {activeIndex === index && (
                   <div
-                    className="p-4 bg-gray-50 text-blue-900 text-sm leading-relaxed border-t border-gray-200 rounded-b-lg text-justify"
+                    className="p-4 bg-gray-50 text-blue-950 text-mb leading-relaxed border-t border-gray-200 rounded-b-lg text-justify"
                     dangerouslySetInnerHTML={{ __html: policy.content }}
                   />
                 )}

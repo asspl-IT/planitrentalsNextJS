@@ -12,8 +12,7 @@ export class ItemDetailsService {
   static async fetchItemDetailsMySql(itemSlug: string): Promise<any> {
   try {
     // ✅ Use SSR-safe env variable first, fallback to NEXT_PUBLIC for client-side use
-    const baseUrl =
-      process.env.AWS_BLOGS_URL || process.env.NEXT_PUBLIC_AWS_BLOGS;
+    const baseUrl = process.env.NEXT_PUBLIC_AWS_BLOGS;
 
     if (!baseUrl) {
       throw new Error("AWS_BLOGS_URL is not defined in environment variables");
@@ -62,7 +61,7 @@ export class ItemDetailsService {
         throw new Error("NEXT_PUBLIC_AWS_API_URL is not defined in environment variables");
       }
 
-      const apiEndpoint = `${baseUrl}itemdetails`;
+      const apiEndpoint = "/aws/itemdetails";
 
       const payload = {
         incomingCategory: locationData.incomingCategory,
