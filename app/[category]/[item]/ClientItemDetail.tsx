@@ -679,7 +679,6 @@ export default function ClientItemDetail({
                 );
               })}
             </div>
-
             <p
               className="mt-6 text-justify text-blue-950"
               dangerouslySetInnerHTML={{

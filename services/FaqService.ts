@@ -8,7 +8,7 @@ export const FaqService = {
   fetchFaqsByCategory: async (urlRoute: string) => {
     try {
       // Fetch all categories
-      const categoriesResponse = await axios.get(`${API_BASE}categories`);
+      const categoriesResponse = await axios.get(`${API_BASES}categories`);
       console.log("categoriesResponse.data:", categoriesResponse.data);
 
       // Normalize categories array
