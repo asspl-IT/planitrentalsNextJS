@@ -79,7 +79,7 @@ const RentalItems = () => {
   const { isLoading: categoriesLoading, error: contextError } = useCategories();
   const params = useParams();
   const router = useRouter();
-  const category = params?.category;
+ const category = decodeURIComponent(params?.category as string ?? "");
   const { LOCATION } = locationLoader();
   const incomingLocation = LOCATION.UT_LOCATION_ID;
 
