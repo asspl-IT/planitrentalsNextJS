@@ -34,8 +34,8 @@ export default async function ItemDetailPage({
 }: {
   params: Promise<{ category: string; item: string }>;
 }) {
-  const resolvedParams = await params; // ✅ Await it here too
-  console.log("🧩 Resolved route params:", resolvedParams);
+  const resolvedParams = await params;
+  console.log("Resolved route params:", resolvedParams);
 
   let staticItemDetail;
   try {

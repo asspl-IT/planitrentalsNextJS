@@ -1,3 +1,4 @@
+// app/[category]/[item]/ClientItemDetail.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -31,12 +32,10 @@ import { locationLoader } from "@/config/locationLoader";
 import { useCart } from "@/context/cartContext";
 import { cartStore } from "@/zustand/cartStore";
 
-/** ---------- Helper: allow both static and dynamic image structures ---------- */
-const FALLBACK_IMAGE = "/coming-soon.png"; // ensure this exists in /public
+const FALLBACK_IMAGE = "/coming-soon.png";
 
 const ALLOWED_IMAGE_HOSTS = ["pirstore.s3.us-west-2.amazonaws.com", "planitrentals.com", "pirstore.s3.amazonaws.com"];
 
-/** Validate and return a safe URL (or fallback) */
 function getSafeImageUrl(imageUrl?: string, fallback = FALLBACK_IMAGE) {
   if (!imageUrl) return fallback;
   if (imageUrl.startsWith("/")) return imageUrl;
@@ -48,29 +47,17 @@ function getSafeImageUrl(imageUrl?: string, fallback = FALLBACK_IMAGE) {
   }
 }
 
-/** Extract an image URL from either structure at a given index */
-function pickImageUrl(
-  source: any,
-  index = 0
-): string | undefined {
+function pickImageUrl(source: any, index = 0): string | undefined {
   if (!source) return undefined;
-
-  // Dynamic (Salesforce) style
   const dyn = source?.Images__r?.records?.[index]?.Original_Image_URL__c;
   if (dyn) return dyn;
-
-  // Static JSON style
   const stat = source?.images?.[index]?.url;
   if (stat) return stat;
-
-  // Some sources store a single top-level image_url
   const single = source?.image_url;
   if (single) return single;
-
   return undefined;
 }
 
-/** Build SEO structured data */
 function buildStructuredData(staticItemDetail: any, itemDetail: any) {
   const first =
     pickImageUrl(itemDetail?.detail, 0) ||
@@ -92,7 +79,6 @@ function buildStructuredData(staticItemDetail: any, itemDetail: any) {
   };
 }
 
-/** Icons map */
 const ICONS: Record<string, any> = {
   person: MdPerson,
   people: BsPeopleFill,
@@ -107,7 +93,6 @@ const ICONS: Record<string, any> = {
   circle: MdCircle,
 };
 
-/** Convert banner string to icon+help list */
 function buildBannerIcons(bannerItems?: string) {
   if (!bannerItems) return [];
   const mappings: Record<string, { helpText: string; icon: keyof typeof ICONS }> = {
@@ -128,14 +113,12 @@ function buildBannerIcons(bannerItems?: string) {
     .map(([, v]) => v);
 }
 
-/** Human-friendly pricing */
 function displayPricing(weekday?: number, weekend?: number) {
   if (!weekday && !weekend) return "Pricing not available";
   if (weekday === weekend) return `$${weekday}/day`;
   return `$${weekday}/day, $${weekend} Fri/Sat`;
 }
 
-/** Skeleton Loader (small) */
 const SkeletonBlock = () => (
   <div className="animate-pulse">
     <div className="w-[250px] h-[250px] md:w-[300px] md:h-[300px] lg:w-[400px] lg:h-[400px] bg-gray-200 rounded" />
@@ -156,15 +139,10 @@ export default function ClientItemDetail({
 }) {
   const router = useRouter();
   const { category: categorySlug, item: itemSlug } = params;
-
   const { LOCATION } = locationLoader();
   const incomingLocation = LOCATION.UT_LOCATION_ID;
 
-  // cart + date store
-  const { state, dispatch } = useCart() as {
-  state: any;
-  dispatch: any;
-};
+  const { state, dispatch } = useCart() as { state: any; dispatch: any };
 
   const {
     setDiscountList,
@@ -180,7 +158,6 @@ export default function ClientItemDetail({
     holidayList,
   } = cartStore();
 
-  // local UI state
   const [itemDetail, setItemDetail] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [loadingDynamic, setLoadingDynamic] = useState(true);
@@ -202,16 +179,14 @@ export default function ClientItemDetail({
 
   const daysOptions = useMemo(() => Array.from({ length: 50 }, (_, i) => i + 1), []);
 
-  // Accordion sections
   const [isOpen, setIsOpen] = useState({
     generalInfo: false,
     instructions: false,
     cancellation: false,
   });
   const toggleSection = (section: string) =>
-    setIsOpen((prev) => ({ ...prev, [section]: !prev[section as keyof typeof prev] }));
+    setIsOpen((prev) => ({ ...prev, [section as keyof typeof prev]: !prev[section as keyof typeof prev] }));
 
-  /** ---------- Holiday + Sunday/Saturday adjustment ---------- */
   const checkAndAdjustForHoliday = (startEpoch: number, rentalDays: number, byUser = false) => {
     const selectedEnd = moment(startEpoch).add(rentalDays - 1, "days").valueOf();
 
@@ -252,7 +227,6 @@ export default function ClientItemDetail({
     popupShownRef.current = false;
     setSelectDate(epoch);
 
-    // holiday adjust
     const adjusted = checkAndAdjustForHoliday(epoch, days, true);
     if (adjusted) return;
 
@@ -294,7 +268,6 @@ export default function ClientItemDetail({
     }
   };
 
-  /** ---------- Add to cart flow ---------- */
   const handleAddToCartClick = () => {
     const qty = parseInt((document.getElementById("quantity") as HTMLInputElement).value);
     const existing = state.items.find((i) => i.id === itemDetail.detail.Id);
@@ -379,9 +352,6 @@ export default function ClientItemDetail({
     }
   };
 
-  /** ---------- Lifecycle ---------- */
-
-  // Initialize default date
   useEffect(() => {
     if (!selectDate) {
       const today = moment().startOf("day").valueOf();
@@ -391,7 +361,6 @@ export default function ClientItemDetail({
     }
   }, [selectDate, setSelectDate, setDays]);
 
-  // Load discounts & holidays for selected date
   useEffect(() => {
     const load = async () => {
       if (!incomingLocation || !selectDate) return;
@@ -409,7 +378,7 @@ export default function ClientItemDetail({
     load();
   }, [incomingLocation, selectDate, setHolidayList, setDiscountList, setSalesTax]);
 
-  // Dynamic availability + item details
+  // MAIN FIX: Never let the page go blank on out-of-stock
   useEffect(() => {
     const fetchAll = async () => {
       if (!hasInteracted || !selectDate || !days) {
@@ -430,10 +399,29 @@ export default function ClientItemDetail({
           incomingLocation,
         });
 
-        const item = items.find((i: any) => i.detail.URL_Route__c?.toLowerCase() === itemSlug);
-        if (!item) throw new Error("Item not found");
+        let foundItem = items.find((i: any) => i.detail.URL_Route__c?.toLowerCase() === itemSlug);
 
-        const details = await ItemDetailsService.fetchItemDetails(item.detail.Id, {
+        // CRITICAL FIX: Even if not in list (because out of stock), still fetch and show as unavailable
+        if (!foundItem) {
+          const details = await ItemDetailsService.fetchItemDetails(staticItemDetail.Id, {
+            incomingCategory: cat.Id,
+            incomingDateRange: generateDateRange(selectDate, days),
+            incomingLocation,
+          });
+
+          setItemDetail({
+            ...details,
+            detail: { ...details.detail, URL_Route__c: itemSlug },
+            category: { ...details.category, URL_Route__c: categorySlug },
+            availableByDay: { isAvailable: false, minimumAvailable: 0 },
+          });
+          setAvailabilityPopup(true);
+          setPopupMessage("This item is not available for the selected dates.");
+          setLoadingDynamic(false);
+          return;
+        }
+
+        const details = await ItemDetailsService.fetchItemDetails(foundItem.detail.Id, {
           incomingCategory: cat.Id,
           incomingDateRange: generateDateRange(selectDate, days),
           incomingLocation,
@@ -458,7 +446,15 @@ export default function ClientItemDetail({
           setAvailabilityPopup(false);
         }
       } catch (err: any) {
-        setError(err.message);
+        console.error("Dynamic fetch failed:", err);
+        // FALLBACK: Use static data + mark as unavailable
+        setItemDetail({
+          detail: staticItemDetail,
+          category: { Name__c: "Category", URL_Route__c: categorySlug },
+          availableByDay: { isAvailable: false, minimumAvailable: 0 },
+        });
+        setAvailabilityPopup(true);
+        setPopupMessage("This item is currently unavailable for the selected dates.");
       } finally {
         setLoadingDynamic(false);
       }
@@ -473,9 +469,9 @@ export default function ClientItemDetail({
     incomingLocation,
     isAddingToCart,
     generateDateRange,
+    staticItemDetail.Id,
   ]);
 
-  // Image carousel auto-advance
   useEffect(() => {
     const total =
       (staticItemDetail?.Images__r?.records?.length ||
@@ -487,16 +483,23 @@ export default function ClientItemDetail({
     return () => clearInterval(id);
   }, [itemDetail, staticItemDetail]);
 
-  // Persist interaction flag
   useEffect(() => {
     if (typeof window !== "undefined") {
       sessionStorage.setItem("hasInteracted", hasInteracted ? "true" : "false");
     }
   }, [hasInteracted]);
 
-  if (error) return <div className="text-red-600 text-center py-10">Error: {error}</div>;
+  // NEVER return full error page — always show something
+  if (error) {
+    return (
+      <div className="text-red-600 text-center py-10 bg-white rounded-lg mx-4">
+        {error === "Item not found"
+          ? "This item is no longer available or has been removed."
+          : error}
+      </div>
+    );
+  }
 
-  // Primary image URL (unified)
   const mainImageUrl = getSafeImageUrl(
     pickImageUrl(staticItemDetail, currentImageIndex) ||
       pickImageUrl(itemDetail?.detail, currentImageIndex)
@@ -514,7 +517,6 @@ export default function ClientItemDetail({
         canonicalUrl={`https://www.planitrentals.com/${categorySlug}/${itemSlug}`}
       />
 
-      {/* Breadcrumbs */}
       <div className="page-header md:mt-[100px] breadcrumb-wrap mb-5">
         <div className="flex flex-wrap gap-1 text-sm font-semibold pirBlue--text">
           <Link href="/" className="pirGreen--text">Home</Link>
@@ -530,7 +532,6 @@ export default function ClientItemDetail({
         </div>
       </div>
 
-      {/* Date + Days */}
       <div className="">
         <div className="mx-auto">
           <div className="ml-4 pb-4 max-w-xl bg-white">
@@ -565,7 +566,6 @@ export default function ClientItemDetail({
           </div>
         </div>
 
-        {/* Popups */}
         {showPopup && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
@@ -580,32 +580,16 @@ export default function ClientItemDetail({
           </div>
         )}
 
-        {availabilityPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-              <p className="text-md pirBlue--text text-justify">{popupMessage}</p>
-              <button
-                onClick={() => setAvailabilityPopup(false)}
-                className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Main content */}
         <div className="mt-4 bg-white flex flex-col md:flex-row p-4 md:p-8 gap-6">
-          {/* Left: Image + badges */}
           <div className="w-full md:w-1/2 flex flex-col items-center">
             {itemDetail?.detail?.Discount_Eligible__c && (
               <p className="flex items-center px-2 py-1 bg-yellow-300 text-green-800 text-sm rounded-lg">
                 <MdSavings className="mr-1" /> 50% off with another item!
               </p>
             )}
-            {!loadingDynamic && hasInteracted && !itemDetail?.availableByDay?.isAvailable && (
-              <p className="flex items-center px-2 py-1 bg-red-500 text-white text-sm rounded-lg">
-                <FaExclamationTriangle className="mr-1" /> Unavailable
+            {hasInteracted && itemDetail && !itemDetail.availableByDay?.isAvailable && (
+              <p className="flex items-center px-2 py-1 mb-3 bg-red-500 text-white text-sm rounded-lg">
+                <FaExclamationTriangle className="mr-1" /> Unavailable for Selected Dates
               </p>
             )}
 
@@ -623,7 +607,6 @@ export default function ClientItemDetail({
             )}
           </div>
 
-          {/* Right: Details */}
           <div className="w-full md:w-1/2 p-4 border-2 border-gray-200 rounded-lg hover:border-green-300">
             <h1 className="text-3xl font-bold pirBlue--text">
               {staticItemDetail?.Name__c || itemDetail?.detail?.Name__c || "Item"}
@@ -660,7 +643,7 @@ export default function ClientItemDetail({
                   Add
                 </button>
               ) : (
-                <p className="text-red-600 font-bold">Out of Stock</p>
+                <p className="bg-red-600 text-white p-2 font-bold">Out of Stock</p>
               )}
             </div>
 
@@ -686,12 +669,14 @@ export default function ClientItemDetail({
               }}
             />
 
-            {/* Accordion */}
             {(["generalInfo", "instructions", "cancellation"] as const).map((section) => (
               <details key={section} className="mt-4 border border-gray-300 text-blue-950 rounded-lg p-3">
                 <summary
                   className="cursor-pointer font-semibold flex justify-between"
-                  onClick={() => toggleSection(section)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleSection(section);
+                  }}
                 >
                   {section === "generalInfo"
                     ? "General Info"
@@ -720,7 +705,6 @@ export default function ClientItemDetail({
           </div>
         </div>
 
-        {/* Popular Addons */}
         {itemDetail?.popularAddonsList?.length > 0 && (
           <div className="mt-10">
             <h3 className="text-2xl font-bold text-center mb-6">Popular With This Item!</h3>
@@ -728,7 +712,6 @@ export default function ClientItemDetail({
               {itemDetail.popularAddonsList.map((addon: any) => {
                 const finalUrl =
                   getSafeImageUrl(
-                    // try unified mapping if present in payload
                     pickImageUrl(addon, 0) || addon?.imageUrl
                   ) || FALLBACK_IMAGE;
 
@@ -763,108 +746,106 @@ export default function ClientItemDetail({
             </div>
           </div>
         )}
-      </div>
 
-      {/* Booking Issue Modal */}
-      {showBookingIssue && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-            <h2 className="text-red-600 font-bold">Booking Issue</h2>
-            <p>{popupMessage}</p>
-            <button
-              onClick={() => setShowBookingIssue(false)}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Acknowledgement Modal */}
-      {showAcknowledgement && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full mx-4 max-h-[70vh] overflow-y-auto">
-            <h2 className="text-red-600 font-bold">Rental Confirmation</h2>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: itemDetail?.detail?.Acknowledgement__c || "",
-              }}
-            />
-            <div className="flex justify-end gap-2 mt-4">
+        {/* Modals */}
+        {showBookingIssue && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+              <h2 className="text-red-600 font-bold">Booking Issue</h2>
+              <p>{popupMessage}</p>
               <button
-                onClick={() => setShowAcknowledgement(false)}
-                className="px-4 py-2 bg-gray-400 text-white rounded"
+                onClick={() => setShowBookingIssue(false)}
+                className="mt-4 px-4 py-2 bg-green-600 text-white rounded"
               >
-                Cancel
+                Close
               </button>
-              <button
-                onClick={() => {
-                  setShowAcknowledgement(false);
-                  setShowAddonDialog(true);
+            </div>
+          </div>
+        )}
+
+        {showAcknowledgement && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full mx-4 max-h-[70vh] overflow-y-auto">
+              <h2 className="text-red-600 font-bold">Rental Confirmation</h2>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: itemDetail?.detail?.Acknowledgement__c || "",
                 }}
-                className="px-4 py-2 bg-green-600 text-white rounded"
-              >
-                Acknowledge
-              </button>
+              />
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  onClick={() => setShowAcknowledgement(false)}
+                  className="px-4 py-2 bg-gray-400 text-white rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAcknowledgement(false);
+                    setShowAddonDialog(true);
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded"
+                >
+                  Acknowledge
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Addon Modal */}
-      {showAddonDialog && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full mx-4 max-h-[70vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4 text-blue-950">Add-on Items</h2>
-            {itemDetail?.costSetUpList?.map((c: any) => {
-              const qty = selectedAddons.find((a: any) => a.id === c.Id)?.quantity || 0;
-              return (
-                <div key={c.Id} className="flex justify-between items-center mb-3">
-                  <p>
-                    {c.Website_Description__c} - ${c.Amount__c}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() =>
-                        setSelectedAddons((prev) =>
-                          qty - 1 <= 0
-                            ? prev.filter((a) => a.id !== c.Id)
-                            : prev.map((a) => (a.id === c.Id ? { ...a, quantity: qty - 1 } : a))
-                        )
-                      }
-                      className="px-2 bg-green-600 text-white"
-                    >
-                      -
-                    </button>
-                    <input type="text" value={qty} readOnly className="w-10 text-center border" />
-                    <button
-                      onClick={() =>
-                        setSelectedAddons((prev) =>
-                          prev.some((a) => a.id === c.Id)
-                            ? prev.map((a) => (a.id === c.Id ? { ...a, quantity: qty + 1 } : a))
-                            : [...prev, { id: c.Id, description: c.Website_Description__c, amount: c.Amount__c, quantity: 1 }]
-                        )
-                      }
-                      className="px-2 bg-green-600 text-white"
-                    >
-                      +
-                    </button>
+        {showAddonDialog && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-lg w-full mx-4 max-h-[70vh] overflow-y-auto">
+              <h2 className="text-xl font-bold mb-4 text-blue-950">Add-on Items</h2>
+              {itemDetail?.costSetUpList?.map((c: any) => {
+                const qty = selectedAddons.find((a: any) => a.id === c.Id)?.quantity || 0;
+                return (
+                  <div key={c.Id} className="flex justify-between items-center mb-3">
+                    <p>
+                      {c.Website_Description__c} - ${c.Amount__c}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          setSelectedAddons((prev) =>
+                            qty - 1 <= 0
+                              ? prev.filter((a) => a.id !== c.Id)
+                              : prev.map((a) => (a.id === c.Id ? { ...a, quantity: qty - 1 } : a))
+                          )
+                        }
+                        className="px-2 bg-green-600 text-white"
+                      >
+                        -
+                      </button>
+                      <input type="text" value={qty} readOnly className="w-10 text-center border" />
+                      <button
+                        onClick={() =>
+                          setSelectedAddons((prev) =>
+                            prev.some((a) => a.id === c.Id)
+                              ? prev.map((a) => (a.id === c.Id ? { ...a, quantity: qty + 1 } : a))
+                              : [...prev, { id: c.Id, description: c.Website_Description__c, amount: c.Amount__c, quantity: 1 }]
+                          )
+                        }
+                        className="px-2 bg-green-600 text-white"
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-            <div className="flex justify-end gap-2 mt-4">
-              <button onClick={() => setShowAddonDialog(false)} className="px-4 py-2 bg-green-600 text-white rounded">
-                Cancel
-              </button>
-              <button onClick={addItemToCart} className="px-4 py-2 bg-green-600 text-white rounded">
-                Add to Cart
-              </button>
+                );
+              })}
+              <div className="flex justify-end gap-2 mt-4">
+                <button onClick={() => setShowAddonDialog(false)} className="px-4 py-2 bg-green-600 text-white rounded">
+                  Cancel
+                </button>
+                <button onClick={addItemToCart} className="px-4 py-2 bg-green-600 text-white rounded">
+                  Add to Cart
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
