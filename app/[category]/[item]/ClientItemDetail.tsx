@@ -138,6 +138,20 @@ export default function ClientItemDetail({
   params: { category: string; item: string };
 }) {
   const router = useRouter();
+  useEffect(() => {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(window.location.href);
+  const date = url.searchParams.get("date");
+  const days = url.searchParams.get("days");
+
+  if (date) setSelectDate(Number(date));
+  if (days) setDays(Number(days));
+
+  // Remove query params from the URL
+  url.search = "";
+  router.replace(url.pathname);
+}, []);
   const { category: categorySlug, item: itemSlug } = params;
   const { LOCATION } = locationLoader();
   const incomingLocation = LOCATION.UT_LOCATION_ID;
