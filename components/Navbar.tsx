@@ -69,7 +69,7 @@ console.log("Processed:", processedCategories);
                   <span className="absolute -top-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     {totalItems}
                   </span>
-                  <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 font-semibold text-green-600">
+                  <span className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 font-semibold text-green-600 pr-5">
                     ${totalWithTax.toFixed(2)}
                   </span>
                 </>
