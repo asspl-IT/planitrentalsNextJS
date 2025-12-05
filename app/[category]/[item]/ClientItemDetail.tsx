@@ -683,39 +683,59 @@ export default function ClientItemDetail({
               }}
             />
 
-            {(["generalInfo", "instructions", "cancellation"] as const).map((section) => (
-              <details key={section} className="mt-4 border border-gray-300 text-blue-950 rounded-lg p-3">
-                <summary
-                  className="cursor-pointer font-semibold flex justify-between"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleSection(section);
-                  }}
+            {/* NEW CONTROLLED EXPANDABLE SECTIONS */}
+            <div className="mt-8 space-y-4">
+              {/* General Info */}
+              <div className="border border-gray-300 rounded-lg">
+                <button
+                  onClick={() => toggleSection("generalInfo")}
+                  className="w-full px-4 py-3 text-left font-semibold text-blue-950 flex justify-between items-center bg-gray-50 hover:bg-gray-100 rounded-t-lg"
                 >
-                  {section === "generalInfo"
-                    ? "General Info"
-                    : section === "instructions"
-                    ? "Instructions"
-                    : "Cancellation Policy"}
-                  <span>{isOpen[section] ? "−" : "+"}</span>
-                </summary>
-                {isOpen[section] && (
-                  <p
-                    className="mt-2 text-justify"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        staticItemDetail[
-                          section === "generalInfo"
-                            ? "General_Info__c"
-                            : section === "instructions"
-                            ? "Instructional_Videos__c"
-                            : "Cancellation_Policy__c"
-                        ] || "",
-                    }}
-                  />
+                  General Info
+                  <span className="text-xl">{isOpen.generalInfo ? "−" : "+"}</span>
+                </button>
+                {isOpen.generalInfo && (
+                  <div className="p-4 text-gray-700 prose max-w-none">
+                    {itemDetail?.detail?.General_Info__c ||
+                      staticItemDetail?.General_Info__c}
+                  </div>
                 )}
-              </details>
-            ))}
+              </div>
+
+              {/* Instructions */}
+              <div className="border border-gray-300 rounded-lg">
+                <button
+                  onClick={() => toggleSection("instructions")}
+                  className="w-full px-4 py-3 text-left font-semibold text-blue-950 flex justify-between items-center bg-gray-50 hover:bg-gray-100 rounded-t-lg"
+                >
+                  Instructions
+                  <span className="text-xl">{isOpen.instructions ? "−" : "+"}</span>
+                </button>
+                {isOpen.instructions && (
+                  <div className="p-4 text-gray-700 prose max-w-none">
+                    {itemDetail?.detail?.Instructional_Videos__c ||
+                      staticItemDetail?.Instructional_Videos__c}
+                  </div>
+                )}
+              </div>
+
+              {/* Cancellation Policy */}
+              <div className="border border-gray-300 rounded-lg">
+                <button
+                  onClick={() => toggleSection("cancellation")}
+                  className="w-full px-4 py-3 text-left font-semibold text-blue-950 flex justify-between items-center bg-gray-50 hover:bg-gray-100 rounded-t-lg"
+                >
+                  Cancellation Policy
+                  <span className="text-xl">{isOpen.cancellation ? "−" : "+"}</span>
+                </button>
+                {isOpen.cancellation && (
+                  <div className="p-4 text-gray-700 whitespace-pre-wrap prose max-w-none text-justify">
+                    {itemDetail?.detail?.Cancellation_Policy__c ||
+                      staticItemDetail?.Cancellation_Policy__c}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
